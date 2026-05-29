@@ -1,3 +1,4 @@
 .env
+discloud.config
 data/state.json
 node_modules/

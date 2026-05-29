@@ -8,15 +8,15 @@ const __dirname = dirname(__filename);
 const PROJECT_ROOT = join(__dirname, "..");
 dotenv.config({ path: join(PROJECT_ROOT, ".env") });
 
-const OWNER = "walway";
-const REPO = "RoPrime";
+const OWNER = "walway"; // Repo owner
+const REPO = "RoPrime"; // Repo name
 
 const DISCORD_TOKEN = process.env.DISCORD_TOKEN;
 const ANNOUNCE_CHANNEL_ID = process.env.ANNOUNCE_CHANNEL_ID;
 const CHECK_INTERVAL_MINUTES = Number(process.env.CHECK_INTERVAL_MINUTES ?? "10");
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 
-/** Matches `Version: **1.2.3**` lines produced by this bot */
+/** Matches `Version: **1.2.3**` */
 const VERSION_IN_MESSAGE = /Version:\s*\*\*([^*]+)\*\*/i;
 
 if (!DISCORD_TOKEN) {
@@ -42,9 +42,11 @@ function formatReleaseMessage(release) {
   const title =
     release.name && release.name !== release.rawTag ? release.name : `RoPrime ${release.rawTag}`;
   return (
-    `**New RoPrime release:** ${title}\n` +
+    `**New ${REPO} release:** ${title}\n` +
     `Version: **${release.tag}**\n` +
     `Release: ${release.htmlUrl}`
+    ``
+    `@Releases`
   );
 }
 
@@ -100,8 +102,7 @@ async function fetchAllReleases() {
 }
 
 /**
- * Walk channel history until every tag in `required` is found on a message from this bot,
- * or there are no older messages.
+ * Checks channel history for each version until new
  */
 async function collectAnnouncedVersionsFromChannel(channel, botUserId, required) {
   const requiredSet = new Set(required);
@@ -170,7 +171,7 @@ async function syncReleasesToChannel(client) {
     await channel.send({ content: formatReleaseMessage(release) });
     const label = release.rawTag || `v${release.tag}`;
     console.log(`Message successfully sent! (${label})`);
-    // Stay under typical per-channel send rate limits when backfilling many releases.
+    // Calling back sleep for rate limit after sending message
     await sleep(1100);
   }
 }
