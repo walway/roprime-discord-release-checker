@@ -1,9 +1,7 @@
-import dotenv from "dotenv";
+import 'dotenv/config';
 import { Client, GatewayIntentBits } from "discord.js";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-
-dotenv.config({ path: join(PROJECT_ROOT, ".env") });
 
 const OWNER = "walway"; // Repo owner
 const REPO = "RoPrime"; // Repo name
